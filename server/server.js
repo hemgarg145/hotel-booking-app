@@ -33,7 +33,7 @@ app.use("/api/hotels", hotelRouter);
 app.use('/api/rooms', roomRouter);
 app.use('/api/bookings', bookingRouter)
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 4000
 
 app.listen(PORT, () => {
     console.log(`Server is running on PORT : ${PORT}`);
