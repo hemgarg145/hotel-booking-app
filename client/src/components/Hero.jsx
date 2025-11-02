@@ -14,7 +14,7 @@ const Hero = () => {
       <h1 className="font-playfair text-2xl md:text-5xl md:leading-[56px] font-bold md:font-extrabold max-w-xl mt-4">
         Discover Your Perfect gateway Destination
       </h1>
-      <p classname="max-w-130 mt-2 text-sm md:text-base">
+      <p className="max-w-130 mt-2 text-sm md:text-base">
         Unparalleled luxury and comfort await at the world's most excusive
         hotels and resorts. Start Your journey today.{" "}
       </p>
