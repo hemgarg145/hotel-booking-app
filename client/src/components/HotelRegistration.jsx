@@ -3,6 +3,7 @@ import { assets, cities } from "../assets/assets";
 import { useAppContext } from "../context/appContext";
 import { useState } from "react";
 import {toast} from "react-hot-toast";
+import axios from "axios";
 
 const HotelRegistration = () => {
 
