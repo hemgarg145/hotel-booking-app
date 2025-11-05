@@ -1,15 +1,19 @@
-import React from 'react'
-import { assets } from '../assets/assets'
+import React from "react";
+import { assets } from "../assets/assets";
 
-const StarRating = ({rating = 4}) => {
+const StarRating = ({ rating }) => {
   return (
-    <>
-    {Array(5).fill('').map((_, index) => (
-        <img src={rating > index ? assets.starIconFilled : assets.starIconOutlined} alt="star-icon" 
-        className='h-4.5 w-4.5' />
-    ))}
-    </>
-  )
-}
+    <div className="flex items-center">
+      {[...Array(5)].map((_, index) => (
+        <img
+          key={index}
+          src={index < rating ? assets.starFilled : assets.starEmpty}
+          alt={index < rating ? "filled star" : "empty star"}
+          className="w-4 h-4"
+        />
+      ))}
+    </div>
+  );
+};
 
-export default StarRating
+export default StarRating;

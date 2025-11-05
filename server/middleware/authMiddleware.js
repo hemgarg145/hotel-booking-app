@@ -1,4 +1,5 @@
 import User from "../models/user.js";
+import { requireAuth } from "@clerk/express";
 
 // middleware to check if user if authenticated
 export const protect = async (req, res, next) => {

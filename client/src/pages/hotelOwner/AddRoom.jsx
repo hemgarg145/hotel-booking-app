@@ -9,17 +9,80 @@ const AddRoom = () => {
     1:null,
     2:null,
     3: null,
-    4:null
-  })
+    4: null,
+  });
   const [inputs, setInputs] = useState({
-    roomType: '',
+    roomType: "",
     pricePerNight: 0,
     amenities: {
-      'Free Wifi':false,
-      'Free Breakfast':false,
-      'Room Services': false,
-      'Mountain View': false,
-      'Pool Access': false
+      "Free Wifi": false,
+      "Free Breakfast": false,
+      "Room Services": false,
+      "Mountain View": false,
+      "Pool Access": false,
+    },
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    //check if all inputs are filled
+    if (
+      !inputs.roomType ||
+      !inputs.pricePerNight ||
+      !inputs.amenities ||
+      !Object.values(images).some((image) => image)
+    ) {
+      toast.error("Please fill in all the details");
+      return;
+    }
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("roomType", inputs.roomType);
+      formData.append("pricePerNight", inputs.pricePerNight);
+      //converting amenties to array and keeping only enabled amenties
+      const amenities = Object.keys(inputs.amenities).filter(
+        (key) => inputs.amenities[key]
+      );
+      formData.append("amenities", JSON.stringify(amenities));
+
+      //adding images to form data
+      Object.keys(images).forEach((key) => {
+        images[key] && formData.append("images", images[key]);
+      });
+
+      const { data } = await axios.post("/api/rooms/", formData, {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
+
+      if (data.success) {
+        toast.success(data.message);
+        setInputs({
+          roomType: "",
+          pricePerNight: 0,
+          amenities: {
+            "Free Wifi": false,
+            "Free Breakfast": false,
+            "Room Services": false,
+            "Mountain View": false,
+            "Pool Access": false,
+          },
+        });
+        setImages({
+          1: null,
+          2: null,
+          3: null,
+          4: null,
+        });
+      }else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setLoading(false)
     }
   })
   const [loading, setLoading] =useState(false)
@@ -78,11 +141,24 @@ const AddRoom = () => {
       <div className='grid grid-cols-2 sm:flex gap-4 my-2 flex-wrap'>
         {Object.keys(images).map((key)=>(
           <label htmlFor={`roomImages${key}`} key={key}>
-            <img className=' max-h-32 cursor-pointer opacity-80'
-            src={images[key]?URL.createObjectURL(images[key]) : assets.uploadArea} alt=""/>
-              <input type="file" accept='image/*' id={`roomImages${key}`} hidden onChange={e=>setImages({...images,
-                [key]: e.target.files[0]
-              })}/>
+            <img
+              className=" max-h-32 cursor-pointer opacity-80"
+              src={
+                images[key]
+                  ? URL.createObjectURL(images[key])
+                  : assets.uploadArea
+              }
+              alt=""
+            />
+            <input
+              type="file"
+              accept="image/*"
+              id={`roomImages${key}`}
+              hidden
+              onChange={(e) =>
+                setImages({ ...images, [key]: e.target.files[0] })
+              }
+            />
           </label>
         ))}
         </div>
@@ -106,12 +182,23 @@ const AddRoom = () => {
       </div>
       <p class="text-gray-800 mt-4">Amenities</p>
       <div className="flex flex-col flex-wrap mt-1 text-gray-400 max-w-sm">
-        {Object.keys(inputs.amenities).map((amentity,index)=>(
+        {Object.keys(inputs.amenities).map((amentity, index) => (
           <div key={index}>
-            <input type="checkbox" id={`amenities${index+1}`} checked={inputs.amenities[amentity]} 
-            onChange={()=>setInputs({...inputs,amenities: {...inputs.amenities, [amentity]: !inputs.amenities[amentity]}})}
-          />
-          <label htmlFor={`amenities${index+1}`}>{amentity}</label>
+            <input
+              type="checkbox"
+              id={`amenities${index + 1}`}
+              checked={inputs.amenities[amentity]}
+              onChange={() =>
+                setInputs({
+                  ...inputs,
+                  amenities: {
+                    ...inputs.amenities,
+                    [amentity]: !inputs.amenities[amentity],
+                  },
+                })
+              }
+            />
+            <label htmlFor={`amenities${index + 1}`}>{amentity}</label>
           </div>
         ))}
       
@@ -119,7 +206,7 @@ const AddRoom = () => {
         <button class="bg-primary text-white px-8 py-2 rounded mt-8 cursor-pointer" disabled={loading}> {loading ?
          'Adding...' : "Add Room"}</button>
     </form>
-  )
-}
+  );
+};
 
-export default AddRoom
+export default AddRoom;

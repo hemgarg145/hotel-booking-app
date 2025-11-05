@@ -184,7 +184,7 @@ const RoomDetails = () => {
             </div>
           </div>
           <button
-            class="px-6 py-2.5 mt-4 rounded text-white bg-primary hover:bg-primary-dull 
+            className="px-6 py-2.5 mt-4 rounded text-white bg-primary hover:bg-primary-dull 
         transition-all cursor-pointer"
           >
             Contact Now
