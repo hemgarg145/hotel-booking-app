@@ -13,6 +13,7 @@ import Title from "./components/Title";
 import ListRoom from "./pages/hotelOwner/ListRoom";
 import AddRoom from "./pages/hotelOwner/AddRoom";
 import {Toaster} from 'react-hot-toast';
+import { ToastContainer } from "react-toastify";
 import { useAppContext } from "./context/appContext";
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
   return (
     <div>
       <Toaster/>
+      <ToastContainer/>
       {!isOwnerPath && <Navbar />}
       { showHotelReg && <HotelRegistration />}
       <div className="min-h-[70vh]">

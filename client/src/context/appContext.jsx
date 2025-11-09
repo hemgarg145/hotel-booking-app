@@ -1,9 +1,8 @@
-// frontend ko backend se connect karne ka main file
 import axios from "axios";
-import { createContext, use, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser, useAuth } from "@clerk/clerk-react";
-import {toast} from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
@@ -17,33 +16,45 @@ export const AppProvider = ({ children }) => {
 
   const [isOwner, setIsOwner] = useState(false);
   const [searchedCities, setSearchedCities] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [showHotelReg, setShowHotelReg] = useState(false);
 
   const fetchUser = async () => {
     try {
-        const {data} = await axios.get('/api/user', {headers: {Authorization : `Bearer ${await getToken()}`}});
-        if(data.success) {
-            setIsOwner(data.role === "hotelOwner");
-            setSearchedCities(data.recenetSearchedCities);
-        } else{
-            //Retry feteching user detail  after 5s
-            setTimeout(() => {
-                fetchUser()
-            }, 5000);
-        }
-
+      const { data } = await axios.get("/api/user", {
+        headers: { Authorization: `Bearer ${await getToken()}` },
+      });
+      if (data.success) {
+        setIsOwner(data.role === "hotelOwner");
+        setSearchedCities(data.recentSearchedCities || []);
+      }
     } catch (error) {
-        toast.error(error.message);
+      toast.error(error.message);
+    }
+  };
+
+  const fetchRooms = async () => {
+    try {
+      const { data } = await axios.get("/api/rooms");
+      if (data.success) {
+        setRooms(data.rooms);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
   useEffect(() => {
-        if(user) {
-            fetchUser();
-        }
+    if (user) fetchUser();
   }, [user]);
 
-  const value = {
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  const value = useMemo(() => ({
     currency,
     navigate,
     user,
@@ -54,8 +65,21 @@ export const AppProvider = ({ children }) => {
     showHotelReg,
     setShowHotelReg,
     searchedCities,
-    setSearchedCities
-  };
+    setSearchedCities,
+    rooms,
+    setRooms,
+    fetchRooms
+  }), [
+    currency,
+    navigate,
+    user,
+    getToken,
+    isOwner,
+    showHotelReg,
+    searchedCities,
+    rooms
+  ]);
+
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
 
