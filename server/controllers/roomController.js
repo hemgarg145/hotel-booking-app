@@ -3,7 +3,6 @@
 import Hotel from "../models/hotelModel.js";
 import {v2 as cloudinary} from 'cloudinary';
 import Room from "../models/roomModel.js";
-import { messageInRaw } from "svix";
 
 export const createRoom = async (req, res) => {
     try {
