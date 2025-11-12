@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { useAppContext } from '../context/appContext';
-import Title from '../components/Title';
-import HotelCard from '../components/HotelCard';
+import React from "react";
+import HotelCard from "./HotelCard";
+import Title from "./Title";
+import { useAppContext } from "../context/appContext";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const RecommendedHotel = () => {
-  const { rooms = [], searchedCities = [] } = useAppContext();
+  const { rooms, searchCities} = useAppContext();
   const [recommended, setRecommended] = useState([]);
-
-  const filterHotels = () => {
-    const filteredHotels = rooms.filter(
-      (room) => room?.hotel && searchedCities.includes(room.hotel.city)
+   const filterHotels = () => {
+    const filteredHotels = rooms.slice().filter(
+      (room) => room?.hotel && searchCities.includes(room.hotel.city)
     );
     setRecommended(filteredHotels);
   };
 
-  useEffect(() => {
-    filterHotels();
-  }, []);
+  useEffect(()=>{
 
+  },[rooms, searchCities])
   if (recommended.length === 0) return null;
 
   return (
@@ -32,6 +32,7 @@ const RecommendedHotel = () => {
           <HotelCard key={room._id} room={room} index={index} />
         ))}
       </div>
+      
     </div>
   );
 };

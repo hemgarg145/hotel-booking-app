@@ -3,12 +3,13 @@ import HotelCard from "./HotelCard";
 import Title from "./Title";
 import { useAppContext } from "../context/appContext";
 import { useNavigate } from "react-router-dom";
+import { roomsDummyData } from "../assets/assets";
 
 const FeaturedDestination = () => {
-  const { rooms = [] } = useAppContext();
+  const { rooms} = useAppContext();
   const navigate = useNavigate();
 
-  if (rooms.length === 0) return null;
+  //if (rooms.length === 0) return null;
 
   return (
     <div className="flex flex-col items-center px-6 md:px-16 lg:px-24 bg-slate-50 py-20">
